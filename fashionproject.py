@@ -1,21 +1,82 @@
 import streamlit as st
 from PIL import Image
+import time
 
-st.title("AI Fashion Stylist")
+from backend import process_user_request
 
-st.write("Upload your photo and get outfit recommendations")
+st.set_page_config(page_title="AI Fashion Stylist", layout="wide")
 
-uploaded_file = st.file_uploader("Upload your image", type=["jpg","png","jpeg"])
+st.title("👗 AI Fashion Stylist")
+st.write("Your personal fashion agent powered by weather and style intelligence")
 
-style = st.selectbox(
-    "Select your style",
-    ("Casual","Formal","Party","Traditional")
+# ---- USER INPUTS ----
+
+city = st.text_input("Enter your city")
+
+gender = st.selectbox(
+    "Select Gender",
+    ["Male", "Female", "Unisex"]
 )
 
-if uploaded_file is not None:
-    image = Image.open(uploaded_file)
-    st.image(image, caption="Uploaded Image")
+style = st.selectbox(
+    "Select Style",
+    [
+        "Casual",
+        "Formal",
+        "Streetwear",
+        "Minimalist",
+        "Party",
+        "Traditional",
+        "Sporty",
+        "Business Casual",
+        "Vacation",
+        "Smart Casual"
+    ]
+)
 
-if st.button("Generate Outfit"):
-    st.write("AI is analyzing your style...")
-    st.success("Recommended Outfit: White Shirt + Blue Denim Jacket")
+uploaded_file = st.file_uploader(
+    "Upload your image",
+    type=["jpg", "jpeg", "png"]
+)
+
+# ---- GENERATE BUTTON ----
+
+generate = st.button("✨ Generate Outfit")
+
+# ---- PROCESS ----
+
+if generate:
+
+    if uploaded_file is None or city == "":
+        st.warning("Please upload an image and enter your city.")
+    else:
+
+        image = Image.open(uploaded_file)
+
+        st.image(image, caption="Uploaded Image", width=300)
+
+        # Processing message
+        with st.spinner("🧠 Your fashion agent is getting you the best outfit..."):
+            time.sleep(2)
+
+            result = process_user_request(image, city, style, gender)
+
+        # ---- WEATHER ----
+
+        st.subheader("🌤 Weather Details")
+
+        st.write("Temperature:", result["temperature"], "°C")
+        st.write("Weather Code:", result["weather_code"])
+
+        # ---- RECOMMENDATION ----
+
+        st.subheader("👕 Outfit Recommendations")
+
+        st.success("Here are some outfits perfect for today 👇")
+
+        for outfit in result["outfits"]:
+            st.write("•", outfit)
+
+        st.subheader("🎨 Recommended Colors")
+
+        st.write(result["colors"])
