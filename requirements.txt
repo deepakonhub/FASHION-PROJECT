@@ -2,4 +2,6 @@ streamlit
 transformers
 torch
 pillow
+
 requests
+Open-meteo.com for weather fetching
