@@ -2,23 +2,22 @@ import requests
 
 def get_weather(city):
 
-    # Step 1: Convert city to latitude & longitude
+    # Get latitude & longitude from city
     geo_url = f"https://geocoding-api.open-meteo.com/v1/search?name={city}&count=1"
-    geo_response = requests.get(geo_url).json()
+    geo_data = requests.get(geo_url, verify=False).json()
 
-    if "results" not in geo_response:
-        return "Unknown", "N/A"
+    if "results" not in geo_data:
+        return None, None
 
-    lat = geo_response["results"][0]["latitude"]
-    lon = geo_response["results"][0]["longitude"]
+    latitude = geo_data["results"][0]["latitude"]
+    longitude = geo_data["results"][0]["longitude"]
 
-    # Step 2: Get weather data
-    weather_url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current_weather=true"
+    # Get weather
+    weather_url = f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current_weather=true"
 
-    weather_response = requests.get(weather_url).json()
+    weather_data = requests.get(weather_url, verify=False).json()
 
-    temperature = weather_response["current_weather"]["temperature"]
-    windspeed = weather_response["current_weather"]["windspeed"]
-    weathercode = weather_response["current_weather"]["weathercode"]
+    temperature = weather_data["current_weather"]["temperature"]
+    weather_code = weather_data["current_weather"]["weathercode"]
 
-    return weathercode, temperature
+    return temperature, weather_code
