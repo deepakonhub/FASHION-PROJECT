@@ -49,34 +49,38 @@ if generate:
 
     if uploaded_file is None or city == "":
         st.warning("Please upload an image and enter your city.")
+
     else:
 
         image = Image.open(uploaded_file)
-
         st.image(image, caption="Uploaded Image", width=300)
 
         # Processing message
         with st.spinner("🧠 Your fashion agent is getting you the best outfit..."):
             time.sleep(2)
-
             result = process_user_request(image, city, style, gender)
 
         # ---- WEATHER ----
 
         st.subheader("🌤 Weather Details")
-
         st.write("Temperature:", result["temperature"], "°C")
         st.write("Weather Code:", result["weather_code"])
 
-        # ---- RECOMMENDATION ----
+        # ---- OUTFITS ----
 
         st.subheader("👕 Outfit Recommendations")
-
         st.success("Here are some outfits perfect for today 👇")
 
-        for outfit in result["outfits"]:
-            st.write("•", outfit)
+        if "outfits" in result:
+            for outfit in result["outfits"]:
+                st.write("•", outfit)
+        else:
+            st.warning("No outfits generated.")
+
+        # ---- COLORS ----
 
         st.subheader("🎨 Recommended Colors")
 
-        st.write(result["colors"])
+        if "colors" in result:
+            for color in result["colors"]:
+                st.write("•", color)}
