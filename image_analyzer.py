@@ -1,22 +1,48 @@
-from PIL import Image
-import numpy as np
+def recommend_colors(skin_tone):
 
-def analyze_image(image):
-    """
-    Simple image analyzer that estimates brightness
-    and returns skin tone category.
-    """
+    palette = {
 
-    # Convert image to numpy array
-    img = np.array(image)
+        "Fair": [
+            "Emerald Green",
+            "Royal Blue",
+            "Burgundy",
+            "Lavender"
+        ],
 
-    # Calculate average brightness
-    brightness = img.mean()
+        "Light": [
+            "Navy Blue",
+            "Olive Green",
+            "Soft Pink",
+            "Teal"
+        ],
 
-    # Determine tone category
-    if brightness < 85:
-        return "Dark"
-    elif brightness < 170:
-        return "Neutral"
-    else:
-        return "Light"
+        "Medium": [
+            "Mustard Yellow",
+            "Coral",
+            "Turquoise",
+            "Forest Green"
+        ],
+
+        "Olive": [
+            "Cream",
+            "Maroon",
+            "Rust",
+            "Deep Purple"
+        ],
+
+        "Brown": [
+            "Bright White",
+            "Cobalt Blue",
+            "Orange",
+            "Gold"
+        ],
+
+        "Dark": [
+            "Bright Yellow",
+            "Mint Green",
+            "Magenta",
+            "Sky Blue"
+        ]
+    }
+
+    return palette.get(skin_tone, ["Black", "White"])
